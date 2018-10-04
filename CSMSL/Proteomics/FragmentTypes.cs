@@ -38,7 +38,9 @@ namespace CSMSL.Proteomics
         z = 1 << 10,
         zdot = 1 << 11,
         Internal = 1 << 12,
-        All = (1 << 12) - 1, // Handy way of setting all below the 12th bit
+        bNeuLoss = 1 << 13,
+        yNeuLoss = 1 << 14,
+        All = (1 << 14) - 1, // Handy way of setting all below the 12th bit
     }
 
     public static class FragmentTypesExtension
@@ -47,7 +49,7 @@ namespace CSMSL.Proteomics
         {
             if (fragmentTypes == FragmentTypes.None)
                 yield break;
-            foreach (FragmentTypes site in Enum.GetValues(typeof (FragmentTypes)))
+            foreach (FragmentTypes site in Enum.GetValues(typeof(FragmentTypes)))
             {
                 if (site == FragmentTypes.None || site == FragmentTypes.All || site == FragmentTypes.Internal)
                 {

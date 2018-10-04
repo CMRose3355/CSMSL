@@ -25,7 +25,7 @@ namespace CSMSL.Spectral
     /// </summary>
     public class MZPeak : IPeak, IEquatable<MZPeak>
     {
-        public double Intensity { get; private set; }
+        public double Intensity { get; set; }
 
         public double MZ { get; private set; }
 
