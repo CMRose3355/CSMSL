@@ -18,6 +18,7 @@
 using CSMSL.Chemistry;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace CSMSL.Proteomics
 {
@@ -83,6 +84,107 @@ namespace CSMSL.Proteomics
 
             return parentSeq.Substring(parentSeq.Length - Number, Number);
         }
+
+        public string GetSequenceWithMods()
+        {
+            if (Parent == null)
+                return "";
+
+            string parentSeq = Parent.SequenceWithModifications;
+
+            Dictionary<int, string> modDict = null;
+            string strippedParentSeq = buildModDict(parentSeq, out modDict);
+
+            StringBuilder sb = new StringBuilder();
+            if (Type.GetTerminus() == Terminus.N)
+            {   
+                for(int i=0; i<Number; i++)
+                {
+
+                    if(i==0)
+                    {
+                        string modString1 = null;
+                        if (modDict.TryGetValue(-1, out modString1))
+                        {
+                            sb.Append(modString1);
+                        }
+                    }
+
+                    sb.Append(strippedParentSeq[i]);
+
+                    string modString = null;
+                    if (modDict.TryGetValue(i, out modString))
+                    {
+                        sb.Append(modString);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = strippedParentSeq.Length - Number; i < strippedParentSeq.Length; i++)
+                {
+                    sb.Append(strippedParentSeq[i]);
+
+                    string modString = null;
+                    if (modDict.TryGetValue(i, out modString))
+                    {
+                        sb.Append(modString);
+                    }
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        private string buildModDict(string sequenceWithMods, out Dictionary<int, string> modDict)
+        {
+            StringBuilder retSB = new StringBuilder();
+            modDict = new Dictionary<int, string>();
+
+            bool inMod = false;
+            StringBuilder currentModString = new StringBuilder();
+            int aaIndex = 0;
+            int modIndex = 0;
+            for(int i=0; i < sequenceWithMods.Length; i++)
+            {
+                if(sequenceWithMods[i] == '[')
+                {
+                    inMod = true;
+                    modIndex = aaIndex - 1;
+                    currentModString.Clear();
+                    currentModString.Append(sequenceWithMods[i]);
+                }
+                else if(inMod)
+                {
+                    if(sequenceWithMods[i] == ']' && aaIndex !=0)
+                    {
+                        inMod = false;
+                        currentModString.Append(sequenceWithMods[i]);
+                        modDict.Add(modIndex, currentModString.ToString());
+                        aaIndex++;
+                    }
+                    else if(sequenceWithMods[i] == '-' && aaIndex == 0)
+                    {
+                        inMod = false;
+                        currentModString.Append(sequenceWithMods[i]);
+                        modDict.Add(modIndex, currentModString.ToString());
+                        aaIndex++;
+                    }
+                    else
+                    {
+                        currentModString.Append(sequenceWithMods[i]);
+                    }
+                }
+                else
+                {
+                    retSB.Append(sequenceWithMods[i]);
+                    aaIndex++;
+                }
+            }
+
+            return retSB.ToString();
+        }
+
 
         public override string ToString()
         {

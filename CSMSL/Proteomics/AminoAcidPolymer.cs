@@ -1326,6 +1326,15 @@ namespace CSMSL.Proteomics
                             case '*': // ignore *
                                 break;
 
+                            case 'B':
+                                break;
+
+                            case 'Z':
+                                break;
+
+                            case 'X':
+                                break;
+
                             default:
                                 throw new ArgumentException(string.Format("Amino Acid Letter {0} does not exist in the Amino Acid Dictionary. {0} is also not a valid character", letter));
                         }
