@@ -40,6 +40,8 @@ namespace CSMSL.Proteomics
 
         public FragmentTypes Type { get; private set; }
 
+        public bool Phos { get; set; } = false;
+
         // TODO figure if this is the best way to do chemical formula fragments
         //public bool TryGetFormula(out ChemicalFormula formula)
         //{
@@ -184,7 +186,6 @@ namespace CSMSL.Proteomics
 
             return retSB.ToString();
         }
-
 
         public override string ToString()
         {
