@@ -658,5 +658,22 @@ namespace CSMSL.IO.Thermo
 
             return Convert.ToString(obj);
         }
+
+        public bool GetFAIMSData(int spectrumNumber, out string faimsState, out string faimsVoltage)
+        {
+            bool retVal = false;
+            faimsState = "False";
+
+            object obj2 = GetExtraValue(spectrumNumber, "FAIMS CV:");
+            faimsVoltage = Convert.ToString(obj2);
+
+            if(faimsVoltage != "false")
+            {
+                faimsState = "True";
+                retVal = true;
+            }
+
+            return retVal;
+        }
     }
 }
